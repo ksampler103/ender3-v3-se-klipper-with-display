@@ -98,8 +98,8 @@ class PrinterSerialBridge:
         self.name = config.get_name().split()[-1]
         self.eol = config.get('eol', default='\n')
         self._ready = False
-        self.baud = config.getint("baud", 115200)
-        self.serial_config = config.getint("config", 4)
+        self.baud = 115200
+        self.serial_config = 3
         self._logging = config.getboolean("logging", False)
 
         self.reactor = self.printer.get_reactor()
@@ -108,8 +108,8 @@ class PrinterSerialBridge:
             self.handle_disconnect)
 
         ppins = self.printer.lookup_object("pins")
-        pin_params = ppins.lookup_pin(config.get("tx_pin"))
-        rx_pin_params = ppins.lookup_pin(config.get("rx_pin"))
+        pin_params = ppins.lookup_pin("PA2")
+        rx_pin_params = ppins.lookup_pin('PA3')
         self.mcu = pin_params['chip']
         self.oid = self.mcu.create_oid()
         self.mcu.register_config_callback(self.build_config)
