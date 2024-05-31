@@ -51,7 +51,10 @@ class MenuKeys:
             if push_only:
                 buttons.register_button_push(pin, callback)
             else:
-                buttons.register_buttons([pin], callback)
+                if name == 'click_pin':
+                    buttons.register_buttons(['^!PB1'], callback)
+                else:
+                    buttons.register_buttons([pin], callback)
             return
         amin, amax = config.getfloatlist('analog_range_' + name, count=2)
         pullup = config.getfloat('analog_pullup_resistor', 4700., above=0.)
