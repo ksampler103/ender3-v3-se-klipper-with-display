@@ -1,6 +1,7 @@
 import time
 import math
 
+
 class TJC3224_LCD:
     """
     Class representing the control interface for a TJC3224 LCD display.
@@ -64,7 +65,7 @@ class TJC3224_LCD:
             serial : Serial object to send messages.
         """
         self.serial = serial
-    
+
     def init_display(self):
         print("Sending handshake... ")
         while not self.handshake():
@@ -158,7 +159,9 @@ class TJC3224_LCD:
         self.byte(min(brightness, 0x40))
         self.send()
 
-    def set_palette(self, background_color=color_black, foreground_color=color_white):
+    def set_palette(
+        self, background_color=color_black, foreground_color=color_white
+    ):
         """
         Set the palette colors for drawing functions.
 
@@ -503,7 +506,16 @@ class TJC3224_LCD:
         self.send()
 
     def draw_signed_float(
-        self, show_background, size, color, background_color, iNum, fNum, x, y, value
+        self,
+        show_background,
+        size,
+        color,
+        background_color,
+        iNum,
+        fNum,
+        x,
+        y,
+        value,
     ):
         """
         Draw a signed floating-point number on the screen.
@@ -525,7 +537,13 @@ class TJC3224_LCD:
         """
         if value < 0:
             self.draw_string(
-                show_background, size, color, background_color, x - 6, y - 3, "-"
+                show_background,
+                size,
+                color,
+                background_color,
+                x - 6,
+                y - 3,
+                "-",
             )
             self.draw_float_value(
                 show_background,
@@ -542,7 +560,13 @@ class TJC3224_LCD:
             )
         else:
             self.draw_string(
-                show_background, size, color, background_color, x - 6, y - 3, " "
+                show_background,
+                size,
+                color,
+                background_color,
+                x - 6,
+                y - 3,
+                " ",
             )
             self.draw_float_value(
                 show_background,
@@ -597,7 +621,14 @@ class TJC3224_LCD:
         self.send()
 
     def move_screen_area(
-        self, direction, offset, background_color, x_start, y_start, x_end, y_end
+        self,
+        direction,
+        offset,
+        background_color,
+        x_start,
+        y_start,
+        x_end,
+        y_end,
     ):
         """
         Copy an area from the virtual display area to the current screen.

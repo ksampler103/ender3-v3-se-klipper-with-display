@@ -1,8 +1,9 @@
 """
-Important: This file is imported from the DWIN_T5UIC1_LCD
+Important: This file is based on the DWIN_T5UIC1_LCD
 repository available on (https://github.com/odwdinc/DWIN_T5UIC1_LCD)
-with no to minimal changes. All credits go to the original author.
+with minimal changes. All credits go to the original author.
 """
+
 import logging
 
 
@@ -85,6 +86,7 @@ class material_preset_t:
         self.bed_temp = bed_temp
         self.fan_speed = fan_speed
 
+
 class PrinterData:
     event_loop = None
     HAS_HOTEND = True
@@ -120,7 +122,6 @@ class PrinterData:
 
     Z_PROBE_OFFSET_RANGE_MIN = -20
     Z_PROBE_OFFSET_RANGE_MAX = 20
-
 
     BABY_Z_VAR = 0
     feedrate_percentage = 100
@@ -161,11 +162,11 @@ class PrinterData:
     def handle_ready(self):
         self.update_variable()
         self.get_additional_values()
- 
 
     def get_additional_values(self):
-        toolhead = self.printer.lookup_object(
-            "toolhead").get_status(self.reactor.monotonic())
+        toolhead = self.printer.lookup_object("toolhead").get_status(
+            self.reactor.monotonic()
+        )
         if toolhead:
             if "position" in toolhead:
                 self.current_position.x = toolhead["position"][0]
@@ -187,18 +188,17 @@ class PrinterData:
                 self.X_MAX_POS = int(volume[0])
                 self.Y_MAX_POS = int(volume[1])
 
-        configfile = self.printer.lookup_object(
-            "configfile").get_status(self.reactor.monotonic())
+        configfile = self.printer.lookup_object("configfile").get_status(
+            self.reactor.monotonic()
+        )
         if "config" in configfile:
             if "bltouch" in configfile["config"]:
                 if "z_offset" in configfile["config"]["bltouch"]:
                     if configfile["config"]["bltouch"]["z_offset"]:
                         self.BABY_Z_VAR = float(
-                            configfile["config"]["bltouch"][
-                                "z_offset"
-                            ]
+                            configfile["config"]["bltouch"]["z_offset"]
                         )
-    
+
     def ishomed(self):
         if (
             self.current_position.home_x
@@ -211,43 +211,52 @@ class PrinterData:
             return False
 
     def offset_z(self, new_offset):
-        self.log('new z offset:', new_offset)
+        self.log("new z offset:", new_offset)
         self.BABY_Z_VAR = new_offset
         self.sendGCode("ACCEPT")
 
     def postREST(self, path, json):
         self.log("postREST called")
 
-
     def GetFiles(self, refresh=False):
-        sdcard = self.printer.lookup_object('virtual_sdcard')
+        sdcard = self.printer.lookup_object("virtual_sdcard")
         files = sdcard.get_file_list(True)
         self.fl = []
         self.names = []
         for file, _ in files:
             self.fl.append(file)
-            self.names.append(file.split('/')[-1])
+            self.names.append(file.split("/")[-1])
         return self.names
 
     def update_variable(self):
-        gcm = self.printer.lookup_object(
-            "gcode_move").get_status(self.reactor.monotonic())
+        gcm = self.printer.lookup_object("gcode_move").get_status(
+            self.reactor.monotonic()
+        )
         z_offset = gcm["homing_origin"][2]  # z offset
         flow_rate = gcm["extrude_factor"] * 100  # flow rate percent
-        self.absolute_moves = gcm["absolute_coordinates"]  # absolute or relative
+        self.absolute_moves = gcm[
+            "absolute_coordinates"
+        ]  # absolute or relative
         self.absolute_extrude = gcm["absolute_extrude"]  # absolute or relative
         speed = gcm["speed"]  # current speed in mm/s
         print_speed = gcm["speed_factor"] * 100  # print speed percent
-        bed = self.printer.lookup_object(
-            "heater_bed").get_status(self.reactor.monotonic())
-        extruder = self.printer.lookup_object(
-            "extruder").get_status(self.reactor.monotonic())
-        fan = self.printer.lookup_object(
-            "fan").get_status(self.reactor.monotonic())
+        bed = self.printer.lookup_object("heater_bed").get_status(
+            self.reactor.monotonic()
+        )
+        extruder = self.printer.lookup_object("extruder").get_status(
+            self.reactor.monotonic()
+        )
+        fan = self.printer.lookup_object("fan").get_status(
+            self.reactor.monotonic()
+        )
         Update = False
         try:
-            if self.thermalManager["temp_bed"]["celsius"] != int(bed["temperature"]):
-                self.thermalManager["temp_bed"]["celsius"] = int(bed["temperature"])
+            if self.thermalManager["temp_bed"]["celsius"] != int(
+                bed["temperature"]
+            ):
+                self.thermalManager["temp_bed"]["celsius"] = int(
+                    bed["temperature"]
+                )
                 Update = True
             if self.thermalManager["temp_bed"]["target"] != int(bed["target"]):
                 self.thermalManager["temp_bed"]["target"] = int(bed["target"])
@@ -274,9 +283,10 @@ class PrinterData:
                 self.HMI_ValueStruct.offset_value = z_offset * 100
                 Update = True
         except:
-            pass  # missing key, shouldn't happen, fixes misses on conditionals ¯\_(ツ)_/¯
-        self.job_Info = self.printer.lookup_object(
-            "print_stats").get_status(self.reactor.monotonic())
+            pass 
+        self.job_Info = self.printer.lookup_object("print_stats").get_status(
+            self.reactor.monotonic()
+        )
         if self.job_Info:
             self.file_name = self.job_Info["filename"]
             self.status = self.job_Info["state"]
@@ -291,7 +301,8 @@ class PrinterData:
 
     def getPercent(self):
         self.virtual_sdcard_stats = self.printer.lookup_object(
-            "virtual_sdcard").get_status(self.reactor.monotonic())
+            "virtual_sdcard"
+        ).get_status(self.reactor.monotonic())
         if self.virtual_sdcard_stats:
             if self.virtual_sdcard_stats["is_active"]:
                 return self.virtual_sdcard_stats["progress"] * 100
@@ -299,7 +310,8 @@ class PrinterData:
 
     def duration(self):
         self.virtual_sdcard_stats = self.printer.lookup_object(
-            "virtual_sdcard").get_status(self.reactor.monotonic())
+            "virtual_sdcard"
+        ).get_status(self.reactor.monotonic())
         if self.virtual_sdcard_stats:
             if self.virtual_sdcard_stats["is_active"]:
                 return self.job_Info["print_duration"]
@@ -333,7 +345,7 @@ class PrinterData:
         )
 
     def sendGCode(self, Gcode):
-        gcode = self.printer.lookup_object('gcode')
+        gcode = self.printer.lookup_object("gcode")
         gcode._process_commands([Gcode])
 
     def disable_all_heaters(self):
@@ -346,11 +358,13 @@ class PrinterData:
     def preheat(self, profile):
         if profile == "PLA":
             self.preHeat(
-                self.material_preset[0].bed_temp, self.material_preset[0].hotend_temp
+                self.material_preset[0].bed_temp,
+                self.material_preset[0].hotend_temp,
             )
         elif profile == "ABS":
             self.preHeat(
-                self.material_preset[1].bed_temp, self.material_preset[1].hotend_temp
+                self.material_preset[1].bed_temp,
+                self.material_preset[1].hotend_temp,
             )
 
     def preHeat(self, bedtemp, exttemp, toolnum=0):
@@ -359,46 +373,59 @@ class PrinterData:
         # 		self.sendGCode('M104 T%s S%s\nM109 T%s S%s' % (toolnum, exttemp, toolnum, exttemp))
         self.setBedTemp(bedtemp)
         self.setExtTemp(exttemp)
-    
+
     def bedIsHeating(self):
-        bed = self.printer.lookup_object(
-            "heater_bed").get_status(self.reactor.monotonic())
+        bed = self.printer.lookup_object("heater_bed").get_status(
+            self.reactor.monotonic()
+        )
         return (int(bed["target"]) > int(bed["temperature"])) if bed else False
-         
+
     def nozzleIsHeating(self):
-        extruder = self.printer.lookup_object(
-            "extruder").get_status(self.reactor.monotonic())
-        return (int(extruder["target"]) > int(extruder["temperature"])) if extruder else False
-    
-    
+        extruder = self.printer.lookup_object("extruder").get_status(
+            self.reactor.monotonic()
+        )
+        return (
+            (int(extruder["target"]) > int(extruder["temperature"]))
+            if extruder
+            else False
+        )
+
     def openAndPrintFile(self, filenum):
-        self.sendGCode('SDCARD_PRINT_FILE FILENAME="{}"'.format(self.fl[filenum]))
+        self.sendGCode(
+            'SDCARD_PRINT_FILE FILENAME="{}"'.format(self.fl[filenum])
+        )
 
     def sendGCode(self, Gcode):
         self.gcode._process_commands([Gcode])
 
     def probe_calibrate(self):
-        self.sendGCode('G28') # home the printer
-        self.sendGCode('PRTOUCH_PROBE_OFFSET CLEAR_NOZZLE=0 APPLY_Z_ADJUST=1') # use the prtouch to find the z offset and apply it
+        self.sendGCode("G28")  # home the printer
+        self.sendGCode(
+            "PRTOUCH_PROBE_OFFSET CLEAR_NOZZLE=0 APPLY_Z_ADJUST=1"
+        )  # use the prtouch to find the z offset and apply it
 
     def resume_job(self):
-        self.sendGCode('RESUME') # resume the print
+        self.sendGCode("RESUME")  # resume the print
 
     def pause_job(self):
-        self.sendGCode('PAUSE') # pause the print
+        self.sendGCode("PAUSE")  # pause the print
 
     def cancel_job(self):
-        self.sendGCode('CANCEL_PRINT') # cancel the print
+        self.sendGCode("CANCEL_PRINT")  # cancel the print
 
     def set_feedrate(self, value):
-        self.sendGCode('M220 S' + str(value)) # set the feedrate through the M220 gcode command
+        self.sendGCode(
+            "M220 S" + str(value)
+        )  # set the feedrate through the M220 gcode command
 
     def moveAbsolute(self, axis, pos, feedrate):
-        self.sendGCode('M82') # change to absolute positioning
-        self.sendGCode('G1 {}{} F{}'.format(axis, str(pos), str(feedrate))) # move the specified axis at the set feedrate
+        self.sendGCode("M82")  # change to absolute positioning
+        self.sendGCode(
+            "G1 {}{} F{}".format(axis, str(pos), str(feedrate))
+        )  # move the specified axis at the set feedrate
 
     def save_settings(self):
-        self.sendGCode('SAVE_CONFIG') # save the current configuration changes
+        self.sendGCode("SAVE_CONFIG")  # save the current configuration changes
 
     def setExtTemp(self, target, toolnum=0):
         self.sendGCode("M104 T%s S%s" % (toolnum, str(target)))
@@ -407,10 +434,10 @@ class PrinterData:
         self.sendGCode("M140 S%s" % str(target))
 
     def setZOffset(self, offset):
-        self.sendGCode('SET_GCODE_OFFSET Z={} MOVE=1'.format(str(offset)))
+        self.sendGCode("SET_GCODE_OFFSET Z={} MOVE=1".format(str(offset)))
 
     def add_mm(self, axis, zoffset):
-        self.sendGCode('TESTZ Z=' + str(zoffset))
+        self.sendGCode("TESTZ Z=" + str(zoffset))
 
     def log(self, msg, *args, **kwargs):
         if self._logging:
