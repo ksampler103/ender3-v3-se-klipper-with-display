@@ -464,7 +464,7 @@ class E3v3seDisplay:
     color_white = 0xFFFF
     color_yellow = 0xFF0F
     color_popup_background = 0x31E8  # Popup background color
-    color_background_grey = 0x1145  # Dark grey background color
+    color_background_grey = 0x0841 #0x1145  # Dark grey background color
     color_background_black = 0x0841  # Black background color
     color_background_red = 0xF00F  # Red background color
     color_popup_text = 0xD6BA  # Popup font_ background color
