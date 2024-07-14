@@ -477,7 +477,7 @@ class E3v3seDisplay:
     # Color Palette Dracula
     color_white = 0xF7BD
     color_yellow = 0xEFD1
-    color_popup_background = 0x31E8  # Popup background color
+    color_popup_background = 0x2947  # Popup background color
     color_background_grey = 0x2947  # Dark grey background color
     color_background_black = 0x2947  # Black background color
     color_background_red = 0xFAAA  # Red background color
