@@ -460,19 +460,33 @@ class E3v3seDisplay:
     icon_text_printing_time = 18
     icon_text_remain_time = 25
 
-    # Color Palette
-    color_white = 0xFFFF
-    color_yellow = 0xFF0F
+    # # Color Palette OEM
+    # color_white = 0xFFFF
+    # color_yellow = 0xFF0F
+    # color_popup_background = 0x31E8  # Popup background color
+    # color_background_grey = 0x1145  # Dark grey background color
+    # color_background_black = 0x0841  # Black background color
+    # color_background_red = 0xF00F  # Red background color
+    # color_popup_text = 0xD6BA  # Popup font_ background color
+    # color_line = 0x3A6A  # Split line color
+    # Rectangle_color = 0xEE2F  # Blue square cursor color
+    # Percent_color = 0xFE29  # Percentage color
+    # BarFill_color = 0x10E4  # Fill color of progress bar
+    # Selected_color = 0x33BB  # Selected color
+
+    # Color Palette Dracula
+    color_white = 0xF7BD
+    color_yellow = 0xEFD1
     color_popup_background = 0x31E8  # Popup background color
-    color_background_grey = 0x0841 #0x1145  # Dark grey background color
-    color_background_black = 0x0841  # Black background color
-    color_background_red = 0xF00F  # Red background color
-    color_popup_text = 0xD6BA  # Popup font_ background color
+    color_background_grey = 0x2947  # Dark grey background color
+    color_background_black = 0x2947  # Black background color
+    color_background_red = 0xFAAA  # Red background color
+    color_popup_text = 0xF7BD  # Popup font_ background color
     color_line = 0x3A6A  # Split line color
-    Rectangle_color = 0xEE2F  # Blue square cursor color
-    Percent_color = 0xFE29  # Percentage color
-    BarFill_color = 0x10E4  # Fill color of progress bar
-    Selected_color = 0x33BB  # Selected color
+    Rectangle_color = 0xEFD1  # Blue square cursor color
+    Percent_color = 0xFDAD  # Percentage color
+    BarFill_color = 0xBC9E  # Fill color of progress bar
+    Selected_color = 0x424B  # Selected color
 
     MENU_CHAR_LIMIT = 24
 
